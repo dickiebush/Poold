@@ -23,11 +23,7 @@
     {% endif %}
     {{ form.password(placeholder = "Password") }} <br><br>
 
-    {% if form.conPass.errors %}
-    {% for error in form.conPass.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}<br>
-    {% endif %}
+    
     {{ form.conPass(placeholder = "Confirm Password")}} <br><br>
 
     {% if form.fullname.errors %}
