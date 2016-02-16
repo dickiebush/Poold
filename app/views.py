@@ -13,13 +13,31 @@ def hello():
 # Have user log in or redirect to sign up 
 @app.route('/login', methods=['GET', 'POST'])
 def welcome():
-    # check if they logged in -- if they have call function that
-        # shoes you next screen
 
     if g.user is not None and g.user.is_authenticated:
+        print g.user
         return redirect('/giveorfind')
 
     form = LoginForm()
+ ###################################################
+ #### LEFT OFF #### 
+ #
+ # I just put two buttons on the giveorfind screen
+ # i have linked those buttons to two urls that will be implemeneted, one 
+ # already is implemented, the other will needs to be put together with a 
+ # form that links to a database inputting the destination adn origin in that trip 
+ # and associate that trip with the current user
+        # this includes a redirection after entering the data that says something
+        # along the lines of "A rider will get in touch with you shortly "
+ # then, we need to redo the parsing of the database on the find rides screen that will
+ # look through all Trips and see which ones match 
+
+ #######################################################
+
+
+
+
+
 
     if form.validate_on_submit():
         user = User.query.get(form.email.data)
@@ -62,7 +80,8 @@ def signup():
     return render_template('signup.html', form = form)
 
 
-@app.route('/findrides')
+@app.route('/findrides', methods=["GET","POST"])
+@login_required
 def find_rides():
     return render_template("findrides.html")
 
@@ -86,7 +105,7 @@ def my_form_post():
 @login_required
 def giveOrFind():
 
-    return "here we will present some text"
+    return render_template("giveorfind.html")
 if __name__ == '__main__':
     app.run(debug=True)
 
