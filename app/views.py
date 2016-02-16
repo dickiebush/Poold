@@ -14,6 +14,10 @@ def welcome():
     # check if they logged in -- if they have call function that
     # shoes you next screen
     form = LoginForm()
+
+    if form.validate_on_submit():
+        return
+        # 
     # Name, Age, Email, Phone Number, Type of Car
     # Page with two buttons that say I am looking for a ride or I have a ride 
     return render_template('welcome.html', form=form)
@@ -27,6 +31,8 @@ def signup():
     if form.validate_on_submit():
         # save data to database here 
             return redirect('/login')
+
+        # need to put error checking in here somewhere 
 
     return render_template('signup.html', form = form)
 
