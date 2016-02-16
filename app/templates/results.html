@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+
+<HTML>
+<BODY>
+<CENTER> <h2> Hey! These are all of the people leaving {{ orig }} and heading towards {{ dest }} </h2> </CENTER>
+<CENTER><TABLE BGCOLOR=white BORDER=1 CELLSPACING=2 CELLPADDING=4 WIDTH=60%>
+<TR BGCOLOR=white>
+<TH>Name</TH> <TH>Origin</TH><TH>Destination</TH><TH>Departure Date</TH><TH>Departure Time</TH><TH>Has Car</TH><TH>Available Seats</TH>
+</TR>
+{% for person in persons %}
+
+<TR>
+<TD ALIGN=CENTER>{{ person['name'] }}</TD> <TD ALIGN=CENTER>{{ person['origin'] }}</TD> <TD ALIGN=CENTER>{{person['destination']}}</TD> <TD ALIGN=CENTER>{{person['depdate']}}</TD> <TD ALIGN=CENTER>{{ person['deptime'] }}</TD><TD ALIGN=CENTER>{{ person['hascar'] }}</TD><TD ALIGN=CENTER>{{ person['seats']}}</TD>
+</TR>
+{% endfor %}
+</TABLE>
+</CENTER>
+
+</BODY>
+</HTML>
