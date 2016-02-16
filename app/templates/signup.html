@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+
+<HTML>
+  <center><h1>Welcome to Poold!</h1>
+  <img src = "http://www.sumopaint.com/images/temp/xzsqdbhhidofdmok.png">
+  
+  <form action="", method="POST", name = "signup"}>
+    {{ form.hidden_tag()}}
+
+    <p> Please enter your information, all fields are required </p>
+
+    {{ form.email(placeholder = "Email") }}<br>
+    {{ form.password(placeholder = "Password") }} <br>
+    {{ form.conPass(placeholder = "Confirm Password")}} <br>
+    {{ form.fullname(placeholder = "Full name") }} <br>
+    {{ form.age(placeholder = "Age") }}      <br>
+    <p> Select type of car  {{ form.carType }} </p>
+
+    <p><input type="submit", value = "Sign Up"></p>
+
+    </form>
+</center>
+</HTML>
