@@ -14,7 +14,7 @@ def welcome():
     # Page with two buttons that say I am looking for a ride or I have a ride 
 
     return render_template('welcome.html', form=form)
-
+ 
 
 @app.route('/giveorfind')
 def giveOrFind():
