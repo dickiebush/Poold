@@ -9,6 +9,7 @@
 
     <p> Please enter your information, all fields are required </p>
 
+    <p>
     {% if form.email.errors %}
     {% for error in form.email.errors %}
     <span style="color: red;">[{{ error }}]</span>
@@ -45,6 +46,7 @@
 
     <p><input type="submit", value = "Sign Up"></p>
 
+</p>
     </form>
 </center>
 </HTML>

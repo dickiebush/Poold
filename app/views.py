@@ -1,6 +1,8 @@
-from flask import render_template, request, redirect
-from app import app
+from flask import render_template, request, redirect, flash, session, url_for, request, g
+from app import app, db, lm
+from flask.ext.login import login_user, logout_user, current_user, login_required 
 from .forms import LoginForm, SignUpForm
+from .models import User, Trip
 
 # Reroute to login screen
 @app.route('/', methods=['GET', 'POST'])
@@ -12,15 +14,30 @@ def hello():
 @app.route('/login', methods=['GET', 'POST'])
 def welcome():
     # check if they logged in -- if they have call function that
-    # shoes you next screen
+        # shoes you next screen
+
+    if g.user is not None and g.user.is_authenticated:
+        return redirect('/giveorfind')
+
     form = LoginForm()
 
     if form.validate_on_submit():
-        return
-        # 
-    # Name, Age, Email, Phone Number, Type of Car
-    # Page with two buttons that say I am looking for a ride or I have a ride 
-    return render_template('welcome.html', form=form)
+        user = User.query.get(form.email.data)
+        if user:
+            if form.password.data == user.password:
+                if form.remember_me.data:
+                    session['remember_me'] = form.remember_me.data
+                    login_user(user, remember=True)
+                else:
+                    login_user(user, remember=False)
+                return giveOrFind() #login successful
+
+            else:
+                return render_template('login.html', form=form, msg1="Password incorrect")
+        else:
+            return render_template('login.html', form=form, msg2="Pleas enter a valid email")
+        
+    return render_template('login.html', form=form)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -29,20 +46,20 @@ def signup():
     form = SignUpForm()
 
     if form.validate_on_submit():
-        # save data to database here 
-            return redirect('/login')
+        flash('Thanks for Signing Up, %s -- Go ahead an Log In now' % str(form.fullname.data).split(" ")[0])
 
-        # need to put error checking in here somewhere 
+        u = User(email=form.email.data,password=form.password.data,fullname=form.fullname.data, 
+        age=int(form.age.data), carType=form.carType.data)
+        # save data to database here 
+        db.session.add(u)
+        db.session.commit()
+       
+
+        return redirect('/login')
+
+     
 
     return render_template('signup.html', form = form)
-
-
-
-
-
-
-
-
 
 
 @app.route('/findrides')
@@ -64,23 +81,31 @@ def my_form_post():
     return render_template("results.html", dest = dest, orig = orig, persons = newPersons)
 
 
-
  
 @app.route('/giveorfind')
+@login_required
 def giveOrFind():
 
     return "here we will present some text"
 if __name__ == '__main__':
     app.run(debug=True)
 
+#########################################################################
+# Helper functions 
+#########################################################################
+
+@lm.user_loader
+def load_user(id):
+    return User.query.get(id)
+
+@app.before_request
+def before_request():
+    g.user = current_user
 
 
-""" 1) HTML and Web Forms and Database hookup for intro register screen """
-""" 2) Intermediary screen that asks whether you want a ride or need a ride """
-""" 3) Set up the 'I can give a ride' screen to enter the information that then links
-        to the database and tells them they will be put in contact with anyone who needs it
-"""
-""" 4) Set up the function to query into the database to find people leaving the
-        same destination and going to a certain one 
-"""
-    
+
+
+
+
+
+
