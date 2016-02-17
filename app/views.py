@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, flash, session, url_for, request, g
 from app import app, db, lm
 from flask.ext.login import login_user, logout_user, current_user, login_required 
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, TripForm, FindRidesForm
 from .models import User, Trip
 
 # Reroute to login screen
@@ -15,29 +15,10 @@ def hello():
 def welcome():
 
     if g.user is not None and g.user.is_authenticated:
-        print g.user
+        
         return redirect('/giveorfind')
 
     form = LoginForm()
- ###################################################
- #### LEFT OFF #### 
- #
- # I just put two buttons on the giveorfind screen
- # i have linked those buttons to two urls that will be implemeneted, one 
- # already is implemented, the other will needs to be put together with a 
- # form that links to a database inputting the destination adn origin in that trip 
- # and associate that trip with the current user
-        # this includes a redirection after entering the data that says something
-        # along the lines of "A rider will get in touch with you shortly "
- # then, we need to redo the parsing of the database on the find rides screen that will
- # look through all Trips and see which ones match 
-
- #######################################################
-
-
-
-
-
 
     if form.validate_on_submit():
         user = User.query.get(form.email.data)
@@ -53,7 +34,7 @@ def welcome():
             else:
                 return render_template('login.html', form=form, msg1="Password incorrect")
         else:
-            return render_template('login.html', form=form, msg2="Pleas enter a valid email")
+            return render_template('login.html', form=form, msg2="Please enter a valid email")
         
     return render_template('login.html', form=form)
 
@@ -64,7 +45,7 @@ def signup():
     form = SignUpForm()
 
     if form.validate_on_submit():
-        flash('Thanks for Signing Up, %s -- Go ahead an Log In now' % str(form.fullname.data).split(" ")[0])
+        
 
         u = User(email=form.email.data,password=form.password.data,fullname=form.fullname.data, 
         age=int(form.age.data), carType=form.carType.data)
@@ -80,32 +61,77 @@ def signup():
     return render_template('signup.html', form = form)
 
 
-@app.route('/findrides', methods=["GET","POST"])
+
+@app.route('/findrides', methods=["GET",'POST'])
 @login_required
 def find_rides():
-    return render_template("findrides.html")
 
-@app.route('/findrides', methods=['POST'])
-def my_form_post():
-
-    dest = request.form['dest']
-    orig = request.form['orig']
-
-    newPersons = []
-
-    #for person in persons:
-    #   if person['origin'] == orig and person['destination'] == dest:
-    #       newPersons.append(person)
-
-    return render_template("results.html", dest = dest, orig = orig, persons = newPersons)
+    form = FindRidesForm()
 
 
- 
+    if form.validate_on_submit():
+        dest = form.dest.data
+        orig = form.orig.data
+
+        trips = Trip.query.all()
+        users = User.query.all()
+
+        newTrips = {}
+
+        # how to, given a ID email, get that users information to print out on the results page 
+        for trip in trips:
+            if trip.origin == orig and trip.destination == dest:
+                user = User.query.get(trip.user_id)
+                newTrips[user] = trip
+                
+
+        for user,trip in newTrips.items():
+            if user == None:
+                print trip.origin
+            else:
+                print user.fullname + " " + trip.origin
+        ## Have a dictionary of User : Trip, how to query into database based on email 
+        return render_template("results.html", dest = dest, orig = orig, form = form, trips = newTrips)
+
+
+    return render_template("findrides.html", form = form)
+
+    # LEFTOFF -- GO ON RESULTS PAGE AND DISPLAY INFROMATION FROM THE TRIP ARRAY 
+
+    
+
+@app.route('/giveride', methods=["GET","POST"])
+@login_required
+def giveride():
+
+    form = TripForm()
+    
+
+    if form.validate_on_submit():
+        
+        trip = Trip(origin=form.origin.data, destination=form.destination.data, timeLeaving=form.time.data, numSeats=form.numSeats.data, user_id=g.user.email)
+        db.session.add(trip)
+        db.session.commit()
+
+        return "<center><h3>Thanks so much for using Poold, a potential rider will be contacting you shortly</h3> <br><br> <form action=\"/\",methods=\"POST\"> <input type=\"submit\", value=\"Return to rides screen\"> </center>"
+                
+    
+    print form.errors
+    #return regular form template
+    return render_template('giveride.html', form = form)
+
 @app.route('/giveorfind')
 @login_required
 def giveOrFind():
 
     return render_template("giveorfind.html")
+
+@app.route('/giveorfind', methods=['POST'])
+@login_required
+def logout():
+    
+    logout_user()
+    return redirect('/login')
 if __name__ == '__main__':
     app.run(debug=True)
 
@@ -120,11 +146,6 @@ def load_user(id):
 @app.before_request
 def before_request():
     g.user = current_user
-
-
-
-
-
 
 
 

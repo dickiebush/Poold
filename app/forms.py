@@ -14,9 +14,6 @@ class LoginForm(Form):
     remember_me = BooleanField('remember_me', default=True)
 
 
-
-
-
 class SignUpForm(Form):
 
     email    = StringField('email', validators=[validators.DataRequired(message="Forgot this one!"), validators.Email(message="This doesn't look like an email.."), validators.Length(message="4 to 25 characters please!",min=4, max=25)])
@@ -27,4 +24,15 @@ class SignUpForm(Form):
     
     carType  = SelectField(u'Programming Language', choices=[('truck','Truck'),('sedan', 'Sedan'), ('SUV', 'SUV'), ('none', 'I don\'t have a car')])
 
+class FindRidesForm(Form):
 
+    dest = StringField('dest', validators=[validators.DataRequired(message="Where you heading to?"), validators.Length(message="Please enter a 2 digit state code", min=2,max=2)])
+    orig = StringField('orig', validators=[validators.DataRequired(message="Where you departing from?"), validators.Length(message="Please enter a 2 digit state code", min=2,max=2)])
+
+
+class TripForm(Form):
+
+    origin = StringField('origin', validators = [validators.DataRequired(message="Where are you coming from?"), validators.Length(message="Please enter a valid state code",min=2, max=2)])
+    destination = StringField('destination', validators = [validators.DataRequired(message="Where are you heading?"), validators.Length(message="Please enter a valid state code",min=2, max=2)])
+    numSeats = IntegerField('numSeats', validators=[validators.DataRequired(message="How many people can you fit?")])
+    time = StringField('time', validators=[validators.DataRequired(message="What time are you leaving?")])

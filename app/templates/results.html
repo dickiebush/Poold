@@ -2,17 +2,20 @@
 
 <HTML>
 <BODY>
-<CENTER> <h2> Hey! These are all of the people leaving {{ orig }} and heading towards {{ dest }} </h2> </CENTER>
+<CENTER> <h2> Hey! These are all of the people leaving {{ orig }} and heading towards {{ dest }} </h2> 
+<img src = "http://www.sumopaint.com/images/temp/xzsqdbhhidofdmok.png"></CENTER> <br> <br>
 <CENTER><TABLE BGCOLOR=white BORDER=1 CELLSPACING=2 CELLPADDING=4 WIDTH=60%>
 <TR BGCOLOR=white>
-<TH>Name</TH> <TH>Origin</TH><TH>Destination</TH><TH>Departure Date</TH><TH>Departure Time</TH><TH>Has Car</TH><TH>Available Seats</TH>
+<TH>Name</TH><TH>Email</TH> <TH>Origin</TH><TH>Destination</TH><TH>Departure Time</TH><TH>Has Car</TH><TH>Available Seats</TH>
 </TR>
-{% for person in persons %}
-
+{% for user, trip in trips.items() %}
 <TR>
-<TD ALIGN=CENTER>{{ person['name'] }}</TD> <TD ALIGN=CENTER>{{ person['origin'] }}</TD> <TD ALIGN=CENTER>{{person['destination']}}</TD> <TD ALIGN=CENTER>{{person['depdate']}}</TD> <TD ALIGN=CENTER>{{ person['deptime'] }}</TD><TD ALIGN=CENTER>{{ person['hascar'] }}</TD><TD ALIGN=CENTER>{{ person['seats']}}</TD>
+<TD ALIGN=CENTER>{{ user.fullname }}</TD> <TD ALIGN=CENTER>{{ user.email }} <TD ALIGN=CENTER>{{ trip.origin }}</TD> <TD ALIGN=CENTER>{{ trip.destination }}</TD> <TD ALIGN=CENTER>{{ trip.timeLeaving }}</TD> <TD ALIGN=CENTER>{{ user.carType }}</TD><TD ALIGN=CENTER>{{ trip.numSeats }}</TD>
 </TR>
 {% endfor %}
+
+<h3> To organize a ride with one of these people, simply email the one that most fits your schedule. Simple! </h3>
+
 </TABLE>
 </CENTER>
 

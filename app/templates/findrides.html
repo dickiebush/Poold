@@ -5,8 +5,21 @@
     <img src = "http://www.sumopaint.com/images/temp/xzsqdbhhidofdmok.png">
     <h2>Where are you headed? We can help. </h2>
     <form action="/findrides" method="POST">
-        <input type="text" name="orig" placeholder="Origin (2 letter state)">
-        <input type="text" name="dest" placeholder="Destination (2 letter state)">
+    {{ form.hidden_tag() }}
+        
+          {% if form.orig.errors %}
+          {% for error in form.orig.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+          {% endif %}<br>
+        {{ form.orig(placeholder="Origin (2 letter state)") }}
+        <br>
+          {% if form.dest.errors %}
+          {% for error in form.dest.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+          {% endif %}<br>
+        {{ form.dest(placeholder="Destination (2 letter state)")}} <br> <br>
         <input type="submit" name="my_form_post" value="Get Poold">
     </form>
     {% if words %}

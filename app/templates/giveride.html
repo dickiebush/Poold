@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<center><body>
+    <h1>Thanks for volunteering as a driver!</h1>
+    <img src = "http://www.sumopaint.com/images/temp/xzsqdbhhidofdmok.png">
+
+    <h2> Please give us some information about your trip so we can match you with a rider </h2>
+
+    <form action="", method="POST",name="giveride">
+
+    {{ form.hidden_tag() }}
+    
+    {% if form.origin.errors %}
+    {% for error in form.origin.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    {% endif %}
+    {{ form.origin(placeholder = "Origin (2 letter state)") }}<br><br>
+
+
+    {% if form.destination.errors %}
+    {% for error in form.destination.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    {% endif %}
+    {{ form.destination(placeholder = "Destination (2 letter state)") }}<br><br>
+
+   
+    {% if form.numSeats.errors %}
+    {% for error in form.numSeats.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    {% endif %}
+    {{ form.numSeats(placeholder = "# of empty seats", size=20) }}<br><br>
+
+
+    {% if form.time.errors %}
+    {% for error in form.time.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    {% endif %}
+    {{ form.time(placeholder = "Departure time")}}<br><br>
+
+    <p><input type="submit", value = "Post your ride offering"></p>
+
+    
+
+    </form>
+
+    </body>
+
+    </center>
+
+    </html>
+
+
+
+
+
+
+
+
+
+
+</body>
+</center>
+</html>
