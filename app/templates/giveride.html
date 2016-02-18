@@ -42,9 +42,12 @@
     {{ form.time(placeholder = "Departure time")}}<br><br>
 
     <p><input type="submit", value = "Post your ride offering"></p>
+    </form>
 
-    
 
+    <h3> Make a mistake? No longer travelling? Click here to delete your ride offering. You can then repost if you'd like</h3>
+    <form action="/giveorfind", method="POST", name="cancelride">
+    <p><input type="submit", name="cancelride", value="Remove my ride offering"/></p>
     </form>
 
     </body>

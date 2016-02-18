@@ -16,7 +16,7 @@ def welcome():
 
     if g.user is not None and g.user.is_authenticated:
         
-        return redirect('/giveorfind')
+        return giveOrFind()
 
     form = LoginForm()
 
@@ -113,25 +113,36 @@ def giveride():
         db.session.add(trip)
         db.session.commit()
 
-        return "<center><h3>Thanks so much for using Poold, a potential rider will be contacting you shortly</h3> <br><br> <form action=\"/\",methods=\"POST\"> <input type=\"submit\", value=\"Return to rides screen\"> </center>"
+        return "<center><h3>Thanks so much for using Poold, a potential rider will be contacting you shortly</h3> <br><br> <form action=\"/\",methods=\"get\"> <input type=\"submit\", value=\"Return to rides screen\"> </center>"
                 
     
     print form.errors
+
     #return regular form template
     return render_template('giveride.html', form = form)
 
-@app.route('/giveorfind')
-@login_required
+@app.route('/giveorfind', methods=["GET","POST"])
 def giveOrFind():
+    
+    if request.method == 'POST':
+        if 'logout' in request.form:
+            print "logging out"
+            logout_user()
+            return redirect('/login')
+        elif 'cancelride' in request.form:
+            user = g.user
+            print "cancelling ride"
+            trips = Trip.query.all()
+            for trip in trips:
+                if trip.user_id == user.email:
+                    print "deleted trip"
+                    db.session.delete(trip)
+                    db.session.commit()
+            return render_template("giveorfind.html")
+    
 
     return render_template("giveorfind.html")
 
-@app.route('/giveorfind', methods=['POST'])
-@login_required
-def logout():
-    
-    logout_user()
-    return redirect('/login')
 if __name__ == '__main__':
     app.run(debug=True)
 
