@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, flash, session, url_for, request, g
+from flask import make_response, render_template, request, redirect, flash, session, url_for, request, g
 from app import app, db, lm
 from flask.ext.login import login_user, logout_user, current_user, login_required 
 from .forms import LoginForm, SignUpForm, TripForm, FindRidesForm
@@ -14,9 +14,11 @@ def hello():
 @app.route('/login', methods=['GET', 'POST'])
 def welcome():
 
+
     if g.user is not None and g.user.is_authenticated:
         
         return giveOrFind()
+
 
     form = LoginForm()
 
@@ -35,8 +37,14 @@ def welcome():
                 return render_template('login.html', form=form, msg1="Password incorrect")
         else:
             return render_template('login.html', form=form, msg2="Please enter a valid email")
-        
-    return render_template('login.html', form=form)
+    
+    if request.cookies.get('splashed') == 'yes':
+        print('cookie confirmed')
+        return render_template('login.html', form=form)
+    else:
+        resp = make_response(render_template('splash.html'))
+        resp.set_cookie('splashed', 'yes')   
+        return resp
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -52,10 +60,11 @@ def signup():
         # save data to database here 
         db.session.add(u)
         db.session.commit()
+
+        login_user(u, remember=True);
        
 
-        return redirect('/login')
-
+        return giveOrFind()
      
 
     return render_template('signup.html', form = form)
