@@ -7,7 +7,6 @@ class User(db.Model):
     age = db.Column(db.Integer, index=True)
     carType = db.Column(db.String(64), index=True)
    
-
     def __repr__(self):
         return ('<User %r>' % (self.fullname))
 

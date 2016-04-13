@@ -14,12 +14,9 @@ def hello():
 @app.route('/login', methods=['GET', 'POST'])
 def welcome():
 
-
-    if g.user is not None and g.user.is_authenticated:
-        
+    if g.user is not None and g.user.is_authenticated
         return giveOrFind()
-
-
+        
     form = LoginForm()
 
     if form.validate_on_submit():
